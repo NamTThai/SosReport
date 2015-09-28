@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Service Application</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Jquery -->
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway" type="text/css">
+
+  <!--  Load webcomponents-lite.min.js for polyfill support. -->
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+
+  <!-- Normailze stylesheet for cross-browser support -->
+  <link rel="stylesheet" src="http://normalize-css.googlecode.com/svn/trunk/normalize.css">
+
+  <!-- Server variables -->
+  <script>
+    var route = "<%= route %>";
+  </script>
+
+  <!-- Components, Styles and Scripts import -->
+  <link rel="import" href="components/components.vulcanized.html">
+  <link rel="stylesheet" href="stylesheets/styles.css">
+  <script src="javascripts/scripts.js"></script>
+
+  <!-- My components in development, until sourcemaps support vulcanize -->
+  <link rel="import" href="components/custom-style.html">
+
+</head>
+<body class="fullbleed layout vertical">
+  <template class="event-listener" is="dom-bind">
+    <paper-drawer-panel class="drawer-panel">
+      <div drawer>
+        <paper-toolbar class="drawer-toolbar">
+          <span class="drawer-toolbar-menu">Menu</span>
+        </paper-toolbar>
+        <paper-menu attr-for-selected="data-route" selected="{{route}}">
+          <paper-item data-route="one" on-click="eDrawerItemClick">Sample Item 1</paper-item>
+          <paper-item data-route="two" on-click="eDrawerItemClick">Sample Item 2</paper-item>
+        </paper-menu>
+      </div>
+      <paper-scroll-header-panel main condenses keep-condensed-header on-paper-header-transform="eHeaderTransform">
+        <paper-toolbar id="mainToolbar" class="tall">
+          <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+          <div class="middle middle-container center horizontal layout">
+            <span class="app-name">Application Title</span>
+          </div>
+          <div class="bottom bottom-container center horizontal layout">
+            <div class="bottom-title paper-font-subhead">Subtitle</div>
+          </div>
+        </paper-toolbar>
+        <div class="content">
+          <iron-pages attr-for-selected="data-route" selected="{{route}}">
+            <section data-route="one">
+              <img src="https://placekitten.com/g/800/800"></img>
+              <img src="https://placekitten.com/g/800/800"></img>
+              <img src="https://placekitten.com/g/800/800"></img>
+              <img src="https://placekitten.com/g/800/800"></img>
+              <img src="https://placekitten.com/g/800/800"></img>
+              <img src="https://placekitten.com/g/800/800"></img>
+            </section>
+            <section data-route="two">Sample Item 2</section>
+          </iron-pages>
+        </div>
+      </paper-scroll-header-panel>
+    </paper-drawer-panel>
+  </template>
+</body>
+</html>
