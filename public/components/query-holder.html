@@ -62,7 +62,7 @@
       </header>
       <iron-collapse id="collapse">
         <section id="searchQuerries" class="card-content">
-          <paper-input id="input" label="{{queryTitle}}" type="text" list="recList" autocomplete="on"></paper-input>
+          <paper-input id="input" label="{{queryTitle}}" type="text" value="{{userInput}}" list="recList" autocomplete="on"></paper-input>
           <datalist id="recList">
             <template is="dom-repeat" items="{{recommendations}}">
               <option value="{{item}}">
