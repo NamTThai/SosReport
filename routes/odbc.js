@@ -63,14 +63,17 @@ router.get('/export', function(req, res) {
           var jsonRes = {};
           response.forEach(function(row) {
             var key = JSON.stringify(row.ConnectionID);
-            log.debug(key);
-            jsonRes[key].participant = row.ParticipantName;
-            jsonRes[key].company = row.GuestMachineDomain;
-            jsonRes[key].machine = row.Name;
+            if (!jsonRes[key]) {
+              jsonRes[key] = [];
+              jsonRes[key].push(row.ParticipantName);
+              jsonRes[key].push(row.GuestMachineDomain);
+              jsonRes[key].push(row.Name);
+              jsonRes[key].push(null, null);
+            }
             if (row.EventType == 10) {
-              jsonRes[row.ConnectionID].start = row.Time;
+              jsonRes[key][3] = row.Time;
             } else {
-              jsonRes[row.ConnectionID].end = row.Time;
+              jsonRes[key][4] = row.Time;
             }
           });
           response = [];
