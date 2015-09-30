@@ -5,36 +5,41 @@ var fs = require('fs');
 var log = require('./log');
 var sqlite = require('sqlite3').verbose();
 
-// var dbUrl = "//cio-screencon/C$/Program Files (x86)/ScreenConnect/App_Data/Session.db";
-var dbUrl = "./data/Session.db";
+var dbUrl = "//cio-screencon/C$/Program Files (x86)/ScreenConnect/App_Data/Session.db";
 
 router.get('/export', function(req, res) {
   var db = new sqlite.Database(dbUrl);
 
-  var query = "select Session.Name, Session.Host, Session.IsPublic, " +
-    "Session.GuestLoggedOnUserDomain, Session.GuestLoggedOnUserName, " +
-    "Session.GuestMachineDomain, Session.GuestMachineName, " +
-    "SessionConnectionEvent.EventType, SessionConnectionEvent.Time, " +
-    "SessionEvent.Host, SessionEvent.EventType from Session " +
-    "left join SessionConnectionEvent on Session.SessionID = SessionConnectionEvent.SessionID " +
-    "left join SessionEvent on Session.SessionID = SessionEvent.SessionID where";
+  var query = "select SessionConnection.ConnectionID, Session.Name, Session.GuestMachineDomain, " +
+    "SessionConnection.ParticipantName, SessionConnectionEvent.EventType, SessionConnectionEvent.Time " +
+    "from SessionConnection inner join Session on Session.SessionID = SessionConnection.SessionID inner join SessionConnectionEvent on SessionConnection.ConnectionID = SessionConnectionEvent.ConnectionID" + " where";
 
+  var params = [];
   if (req.query.workstation) {
-    query += ' Session.Name = "' + req.query.workstation + '"';
+    query += ' Session.Name = (?)';
+    params.push(req.query.workstation);
   }
 
   if (req.query.domain) {
-    query += ' Session.GuestMachineDomain = "' + req.query.domain + '"';
+    query += ' Session.GuestMachineDomain = (?)';
+    params.push(req.query.domain);
   }
 
   if (req.query.user) {
-    query += ' SessionEvent.Host = "' + req.query.user + '"';
+    query += " SessionConnection.ParticipantName = '" + req.query.user + "'";
+    params.push(req.query.user);
+  }
+
+  if (params.length === 0) {
+    res.send({
+      statusCode: 500,
+      message: "No criteria was provided"
+    });
   }
 
   response = [];
 
   log.debug(query);
-
 
   db.serialize(function() {
     db.each(query, function(err, row) {
@@ -69,7 +74,7 @@ router.get('/recommendations', function(req, res) {
       column = "Name";
       break;
     case "user":
-      query = "select distinct Host from SessionEvent";
+      query = "select distinct ParticipantName from SessionConnection";
       column = "Host";
       break;
     case "domain":
@@ -89,7 +94,7 @@ router.get('/recommendations', function(req, res) {
   db.serialize(function() {
     db.each(query, function(err, row) {
       if (!err) {
-        response.push(row[column]);
+        response.push(row);
       }
     }, function(err, rowCount) {
       if (err) {
