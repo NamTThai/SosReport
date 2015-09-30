@@ -62,7 +62,7 @@ router.get('/export', function(req, res) {
         } else {
           var jsonRes = {};
           response.forEach(function(row) {
-            var key = JSON.toString(row.ConnectionID);
+            var key = JSON.stringify(row.ConnectionID);
             log.debug(key);
             jsonRes[key].participant = row.ParticipantName;
             jsonRes[key].company = row.GuestMachineDomain;
