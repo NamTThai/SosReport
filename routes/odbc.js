@@ -149,10 +149,17 @@ router.get('/recommendations', function(req, res) {
 });
 
 function convertToCsv(response) {
-  var converter = require('csvjson');
   var fileName = Date.now() + '.csv';
   var filePath = require('path').join("public", fileName);
-  converter.toCSV(response).save(fileName);
+
+  var headers = ["Participant", "Company Name", "Machine Name", "Start", "End"];
+  var file = fs.createWriteStream(filePath);
+  file.write(headers.join(",") + '\n');
+  response.forEach(function(row) {
+    file.write(row.join(",") + '\n');
+  });
+  file.end();
+  
   return fileName;
 }
 
