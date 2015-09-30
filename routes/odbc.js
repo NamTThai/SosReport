@@ -147,8 +147,10 @@ router.get('/recommendations', function(req, res) {
 });
 
 function convertToCsv(response) {
-  var fileName = Date.now();
+  var converter = require('csvjson');
+  var fileName = Date.now() + '.csv';
   var filePath = require('path').join("public", fileName);
+  converter.toCSV(response).save(fileName);
   return fileName;
 }
 
