@@ -150,7 +150,7 @@ router.get('/recommendations', function(req, res) {
 
 function convertToCsv(response) {
   var fileName = Date.now() + '.csv';
-  var filePath = require('path').join("public", fileName);
+  var filePath = require('path').join("build", fileName);
 
   var headers = ["Participant", "Company Name", "Machine Name", "Start", "End"];
   var file = fs.createWriteStream(filePath);
@@ -159,7 +159,7 @@ function convertToCsv(response) {
     file.write(row.join(",") + '\n');
   });
   file.end();
-  
+
   return fileName;
 }
 
