@@ -75,9 +75,9 @@ router.get('/export', function(req, res) {
               jsonRes[key].push(null, null);
             }
             if (row.EventType == 10) {
-              jsonRes[key][3] = row.Time;
+              jsonRes[key][3] = new Date(row.Time);
             } else {
-              jsonRes[key][4] = row.Time;
+              jsonRes[key][4] = new Date(row.Time);
             }
           });
           response = [];
