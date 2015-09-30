@@ -26,7 +26,7 @@ router.get('/export', function(req, res) {
   }
 
   if (req.query.user) {
-    query += " SessionConnection.ParticipantName = '" + req.query.user + "'";
+    query += " SessionConnection.ParticipantName = (?)";
     params.push(req.query.user);
   }
 
@@ -42,7 +42,7 @@ router.get('/export', function(req, res) {
   log.debug(query);
 
   db.serialize(function() {
-    db.each(query, function(err, row) {
+    db.each(query, params, function(err, row) {
       if (!err) {
         response.push(row);
       }
@@ -62,9 +62,11 @@ router.get('/export', function(req, res) {
         } else {
           var jsonRes = {};
           response.forEach(function(row) {
-            jsonRes[row.ConnectionID].participant = row.ParticipantName;
-            jsonRes[row.ConnectionID].company = row.GuestMachineDomain;
-            jsonRes[row.ConnectionID].machine = row.Name;
+            var key = JSON.toString(row.ConnectionID);
+            log.debug(key);
+            jsonRes[key].participant = row.ParticipantName;
+            jsonRes[key].company = row.GuestMachineDomain;
+            jsonRes[key].machine = row.Name;
             if (row.EventType == 10) {
               jsonRes[row.ConnectionID].start = row.Time;
             } else {
