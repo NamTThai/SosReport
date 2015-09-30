@@ -5,7 +5,7 @@ var fs = require('fs');
 var log = require('./log');
 var sqlite = require('sqlite3').verbose();
 
-var dbUrl = "//cio-screencon/C$/Program Files (x86)/ScreenConnect/App_Data/Session.db";
+var dbUrl = "C:/Program Files (x86)/ScreenConnect/App_Data/Session.db";
 
 router.get('/export', function(req, res) {
   var db = new sqlite.Database(dbUrl);
@@ -54,14 +54,37 @@ router.get('/export', function(req, res) {
           message: err
         });
       } else {
-
-        res.send({
-          statusCode: 200,
-          response: JSON.stringify(response)
-        });
+        if (response.length === 0) {
+          res.send({
+            statusCode: 404,
+            message: "Nothing was found"
+          });
+        } else {
+          var jsonRes = {};
+          response.forEach(function(row) {
+            jsonRes[row.ConnectionID].participant = row.ParticipantName;
+            jsonRes[row.ConnectionID].company = row.GuestMachineDomain;
+            jsonRes[row.ConnectionID].machine = row.Name;
+            if (row.EventType == 10) {
+              jsonRes[row.ConnectionID].start = row.Time;
+            } else {
+              jsonRes[row.ConnectionID].end = row.Time;
+            }
+          });
+          response = [];
+          for (var key in jsonRes) {
+            response.push(jsonRes[key]);
+          }
+          res.send({
+            statusCode: 200,
+            response: JSON.stringify(response)
+          });
+        }
       }
     });
   });
+
+  db.close();
 });
 
 router.get('/recommendations', function(req, res) {
@@ -94,7 +117,7 @@ router.get('/recommendations', function(req, res) {
   db.serialize(function() {
     db.each(query, function(err, row) {
       if (!err) {
-        response.push(row);
+        response.push(row[column]);
       }
     }, function(err, rowCount) {
       if (err) {
