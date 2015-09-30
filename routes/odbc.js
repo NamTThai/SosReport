@@ -12,21 +12,22 @@ router.get('/export', function(req, res) {
 
   var query = "select SessionConnection.ConnectionID, Session.Name, Session.GuestMachineDomain, " +
     "SessionConnection.ParticipantName, SessionConnectionEvent.EventType, SessionConnectionEvent.Time " +
-    "from SessionConnection inner join Session on Session.SessionID = SessionConnection.SessionID inner join SessionConnectionEvent on SessionConnection.ConnectionID = SessionConnectionEvent.ConnectionID" + " where";
+    "from SessionConnection inner join Session on Session.SessionID = SessionConnection.SessionID inner join SessionConnectionEvent on SessionConnection.ConnectionID = SessionConnectionEvent.ConnectionID" + " where ";
 
   var params = [];
+  var queries = [];
   if (req.query.workstation) {
-    query += ' Session.Name = (?)';
+    queries.push('Session.Name = (?)');
     params.push(req.query.workstation);
   }
 
   if (req.query.domain) {
-    query += ' Session.GuestMachineDomain = (?)';
+    queries.push('Session.GuestMachineDomain = (?)');
     params.push(req.query.domain);
   }
 
   if (req.query.user) {
-    query += " SessionConnection.ParticipantName = (?)";
+    queries.push('SessionConnection.ParticipantName = (?)');
     params.push(req.query.user);
   }
 
@@ -41,6 +42,8 @@ router.get('/export', function(req, res) {
   response = [];
 
   log.debug(query);
+
+  query += queries.join(" and ");
 
   db.serialize(function() {
     db.each(query, params, function(err, row) {
@@ -104,7 +107,7 @@ router.get('/recommendations', function(req, res) {
       break;
     case "user":
       query = "select distinct ParticipantName from SessionConnection";
-      column = "Host";
+      column = "ParticipantName";
       break;
     case "domain":
       query = "select distinct GuestMachineDomain from Session";
