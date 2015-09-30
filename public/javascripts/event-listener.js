@@ -45,6 +45,8 @@ document.addEventListener("WebComponentsReady", function() {
       }
     }
 
+    console.log(exportQuery);
+
     $.get('/sosreport/odbc/export', exportQuery, function(data) {
       if (data.statusCode != 200) {
         $("#status").text("Nothing match your search query. Please doublecheck and try again");

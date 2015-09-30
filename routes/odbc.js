@@ -35,6 +35,7 @@ router.get('/export', function(req, res) {
       statusCode: 500,
       message: "No criteria was provided"
     });
+    return;
   }
 
   response = [];
