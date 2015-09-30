@@ -84,9 +84,11 @@ router.get('/export', function(req, res) {
           for (var key in jsonRes) {
             response.push(jsonRes[key]);
           }
+          var filePath = convertToCsv(response);
           res.send({
             statusCode: 200,
-            response: JSON.stringify(response)
+            response: JSON.stringify(response),
+            filePath: filePath
           });
         }
       }

@@ -49,7 +49,7 @@ document.addEventListener("WebComponentsReady", function() {
       if (data.statusCode != 200) {
         $("#status").text("Nothing match your search query. Please doublecheck and try again");
       } else {
-        document.exportLink = data.exportLink;
+        document.exportLink = data.filePath;
         document.querySelector("result-table").populate(JSON.parse(data.response));
         $("#status").text("Export link ready!");
       }
