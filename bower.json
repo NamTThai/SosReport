@@ -22,6 +22,10 @@
     "paper-menu": "PolymerElements/paper-menu#~1.1.0",
     "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#~1.0.6",
     "paper-toolbar": "PolymerElements/paper-toolbar#~1.0.4",
-    "polymer": "~1.0.8"
+    "polymer": "~1.0.8",
+    "iron-collapse": "PolymerElements/iron-collapse#~1.0.3",
+    "paper-fab": "PolymerElements/paper-fab#~1.0.4",
+    "paper-input": "PolymerElements/paper-input#~1.0.14",
+    "iron-dropdown": "PolymerElements/iron-dropdown#~1.0.6"
   }
 }

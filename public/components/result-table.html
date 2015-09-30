@@ -1,0 +1,81 @@
+<dom-module id="result-table">
+  <style>
+    #status {
+      color: #FF6D00;
+      font-size: 1.3em;
+    }
+
+    #status:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    #resultTable {
+      width: 100%;
+      border-collapse: collapse;
+      max-width: 1000px;
+      margin: 0 auto;
+	  overflow: auto;
+    }
+
+    #resultTable, .result-tb-header, .result-tb-data {
+      border: 2px solid lightgrey;
+
+    }
+
+    .result-tb-header, .result-tb-data {
+      padding: 12px;
+      font-size: 1.2em;
+    }
+
+    .result-tb-data[violated] {
+      background-color: #1b5e20;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+
+  <template>
+  	<div class="table-wrapper">
+  		<table id="resultTable">
+  		  <tr>
+  			<template is="dom-repeat" items="{{headers}}">
+  			  <th class="result-tb-header">{{item}}</th>
+  			</template>
+  		  </tr>
+  		  <template is="dom-repeat" items="[[rows]]" as="row">
+  			<tr>
+  			  <template is="dom-repeat" items="[[row]]" as="item">
+  				<td violated$=[[item.violated]] class="result-tb-data">[[item.value]]</td>
+  			  </template>
+  			</tr>
+  		  </template>
+  		</table>
+  	</div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: "result-table",
+
+    ready: function() {
+    },
+
+    properties: {
+      headers: {
+        type: Array,
+        value: ["Host", "Company Name", "Machine Name", "Start", "End"]
+      }
+    },
+
+    populate: function(route, data) {
+      this.rows = data;
+      console.log(data);
+    }
+  });
+</script>

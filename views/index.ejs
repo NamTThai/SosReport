@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <title>Service Application</title>
+  <title>SosReport</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -29,6 +29,8 @@
 
   <!-- My components in development, until sourcemaps support vulcanize -->
   <link rel="import" href="components/custom-style.html">
+  <link rel="import" href="components/query-holder.html">
+  <link rel="import" href="components/result-table.html">
 
 </head>
 <body class="fullbleed layout vertical">
@@ -39,31 +41,33 @@
           <span class="drawer-toolbar-menu">Menu</span>
         </paper-toolbar>
         <paper-menu attr-for-selected="data-route" selected="{{route}}">
-          <paper-item data-route="one" on-click="eDrawerItemClick">Sample Item 1</paper-item>
-          <paper-item data-route="two" on-click="eDrawerItemClick">Sample Item 2</paper-item>
+          <paper-item data-route="search" on-click="eDrawerItemClick">Search</paper-item>
         </paper-menu>
       </div>
       <paper-scroll-header-panel main condenses keep-condensed-header on-paper-header-transform="eHeaderTransform">
         <paper-toolbar id="mainToolbar" class="tall">
           <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
           <div class="middle middle-container center horizontal layout">
-            <span class="app-name">Application Title</span>
+            <span class="app-name">ScreenConnect Report</span>
           </div>
           <div class="bottom bottom-container center horizontal layout">
-            <div class="bottom-title paper-font-subhead">Subtitle</div>
+            <div class="bottom-title paper-font-subhead">CIO Solutions</div>
           </div>
         </paper-toolbar>
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
-            <section data-route="one">
-              <img src="https://placekitten.com/g/800/800"></img>
-              <img src="https://placekitten.com/g/800/800"></img>
-              <img src="https://placekitten.com/g/800/800"></img>
-              <img src="https://placekitten.com/g/800/800"></img>
-              <img src="https://placekitten.com/g/800/800"></img>
-              <img src="https://placekitten.com/g/800/800"></img>
+            <section data-route="search">
+              <div id="commands" class="row">
+                <div class="col-3"></div>
+                <paper-fab class="status-fab" icon="search" on-click="eSearch" mini></paper-fab>
+                <paper-fab class="status-fab" icon="file-download" on-click="eExport" mini></paper-fab>
+                <span id="status">Status</span>
+              </div>
+              <query-holder query-title="WorkStation"></query-holder>
+              <query-holder query-title="Domain"></query-holder>
+              <query-holder query-title="User"></query-holder>
+              <result-table></result-table>
             </section>
-            <section data-route="two">Sample Item 2</section>
           </iron-pages>
         </div>
       </paper-scroll-header-panel>

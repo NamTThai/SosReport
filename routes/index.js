@@ -4,19 +4,13 @@ var router = express.Router();
 // Get home page
 router.get('/', function(req, res) {
   res.render('index', {
-    route: "one"
+    route: "search"
   });
 });
 
-router.get('/one', function(req, res) {
+router.get('/search', function(req, res) {
   res.render('index', {
-    route: "one"
-  });
-});
-
-router.get('/two', function(req, res) {
-  res.render('index', {
-    route: "two"
+    route: "search"
   });
 });
 

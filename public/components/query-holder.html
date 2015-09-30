@@ -1,0 +1,135 @@
+<dom-module id="query-holder">
+  <style>
+    #card {
+      background: white;
+      margin: 1em auto;
+      border-radius: 2px;
+      width: 100%;
+      max-width: 800px;
+      position: relative;
+    }
+
+    #cardHeader {
+      padding: 1em 1.5em;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    #header {
+      font-size: 1.3em;
+      line-height: 1.6em;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .card-content {
+      width: 100%;
+      padding: 1.5em 0.8em 0.8em 0.8em;
+    }
+
+    .query-header {
+      text-align: left;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    #search {
+      width: 3em;
+      height: 3em;
+      padding: 0.5em;
+      position: absolute;
+      z-index: 1;
+      right: 0.8em;
+      top: 3.3em;
+    }
+
+    @media only screen and (max-width: 329px) {
+      #card {
+        margin: 0.625em;
+        overflow: auto;
+        position: relative;
+      }
+
+      #header {
+        white-space: normal;
+      }
+    }
+  </style>
+
+  <template>
+    <paper-material elevation="1" id="card">
+      <header id="cardHeader" on-click="toggleContent">
+        <div id="header">{{queryTitle}}</div>
+      </header>
+      <iron-collapse id="collapse">
+        <section id="searchQuerries" class="card-content">
+          <paper-input id="input" label="{{queryTitle}}" type="text" list="recList" autocomplete="on"></paper-input>
+          <datalist id="recList">
+            <template is="dom-repeat" items="{{recommendations}}">
+              <option value="{{item}}">
+            </template>
+          </datalist>
+        </section>
+      </iron-collapse>
+    </paper-material>
+  </template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: "query-holder",
+
+    ready: function() {
+      this.fetchRecommendation(this.queryTitle.toLowerCase());
+
+      var pol = this;
+      this.$.input.onkeypress = function(event) {
+        var event = event || window.event;
+        var charCode = event.which || event.keyCode;
+
+        if (charCode == "13") {
+          pol.eSearch();
+        }
+      }
+    },
+
+    properties: {
+      queryTitle: String,
+      userInput: {
+        type: String,
+        observer: "eRec"
+      }
+    },
+
+    eSearch: function() {
+      this.fire("search", {bubbles: true});
+    },
+
+    eRec: function() {
+      console.log(this.userInput);
+      if (this.userInput.length > 1) {
+        this.recFiltered = this.recommendations;
+      } else {
+        this.recFiltered = null;
+      }
+    },
+
+    fetchRecommendation: function(category) {
+      var poly = this;
+      $.get("/sosreport/odbc/recommendations", {category: category}, function(data) {
+        if (data.statusCode == 200) {
+          poly.recommendations = data.response;
+        }
+      });
+    },
+
+    getQuery: function() {
+      return this.userInput;
+    },
+
+    toggleContent: function() {
+      var collapseContent = this.$.collapse;
+      collapseContent.toggle();
+    }
+  });
+</script>
