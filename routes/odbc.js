@@ -41,9 +41,9 @@ router.get('/export', function(req, res) {
 
   response = [];
 
-  log.debug(query);
-
   query += queries.join(" and ");
+
+  log.debug(query);
 
   db.serialize(function() {
     db.each(query, params, function(err, row) {
